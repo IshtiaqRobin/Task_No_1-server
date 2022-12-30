@@ -9,11 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.78yphzz.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// console.log(client);
 
 // main function 
 async function run() {
@@ -60,22 +57,40 @@ async function run() {
             res.send(result)
         })
 
-        // app.get('/allPost', async (req, res) => {
-        //     let query = {}
-        //     if (req.query.email) {
-        //         query = {
-        //             email: req.query.email
-        //         }
-        //     };
-        //     const cursor = srjrPostCollection.find(query)
-        //     const result = await cursor.toArray();
-        //     res.send(result)
-        // })
+        // comment post
+        app.get('/comment', async (req, res) => {
+            let query = {}
+            if (req.query.service_id) {
+                query = {
+                    service_id: req.query.service_id
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews)
+        })
+
+        // comment get
+        app.get('/comment', async (req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+
+            const cursor = reviewCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews)
+        });
+
     }
+
     finally {
 
     }
 }
+
 run().catch(error => console.log(error))
 
 
